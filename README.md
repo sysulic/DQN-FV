@@ -28,7 +28,7 @@ The structure of the data folder is as follows:
 
 To replicate the experiments, you need to download these data as follows, or directly obtain them at [Google Drive](https://drive.google.com/drive/folders/1armZDd2fch8RFH09rfswAIwbdsx_c2QW?usp=sharing).
 
-Note: due to the large size, you should run the following commond to download `fever.db` alone and put it into `fever`:
+Note: due to the large size, you should run the following command to download `fever.db` alone and put it into `fever`:
 ```
 # Download the fever database
 wget -O data/fever/fever.db https://s3-eu-west-1.amazonaws.com/fever.public/wiki_index/fever.db
@@ -61,7 +61,7 @@ You can also directly download our fine-tune version at [Google Drive](https://d
 
 Run `sh train.sh` to train our DQN-based model. All checkpoints of our DQN-based model can be found at [Google Drive](https://drive.google.com/drive/folders/1armZDd2fch8RFH09rfswAIwbdsx_c2QW?usp=sharing).
 
-If you train the model at first, it may spend a long time (about 1 day on our machine) for the sentence encoding module to process the sentences into corresponding semantic representations. Due to the large size, we do not upload the processed-ready data to the cloud. You can directly email `wanhai@mail.sysu.edu.cn` to obtain the data.
+If you train the model at first, it may spend a long time (about 1 day in our machine) for the sentence encoding module to process the sentences into corresponding semantic representations. Due to the large size, we do not upload the processed-ready data to the cloud. You can directly email `wanhai@mail.sysu.edu.cn` to obtain the data.
 
 Note: the following commands in `train.sh` are to set the version of our DQN-based model. Please choose one before training.
 ```
@@ -90,7 +90,7 @@ export ID=LA
 
 Run `sh dev.sh`/`sh test.sh` to evaluate our approach on DEV/TEST set.
 
-After evaluating on TEST, you should submit `test_precise_with/without_post_processing.jsonl` to [https://competitions.codalab.org/competitions/18814#participate](Codalab) to view the blind-test results. 
+After evaluating on TEST, you should submit `test_precise_with/without_post_processing.jsonl` to [CodaLab](https://competitions.codalab.org/competitions/18814#participate) to view the blind-test results. 
 
 Note: the following commands in `dev.sh/test.sh` are to set the version of our DQN-based model. Please note that the `CHECKPOINT` in the script should be kept the same as the version.
 ```
