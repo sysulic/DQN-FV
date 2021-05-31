@@ -11,3 +11,4 @@ data/retrieved/*
 output/*
 !output/README.md
 **/*.py[cod]
+**/*.zip
