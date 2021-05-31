@@ -13,6 +13,7 @@ import numpy as np
 from collections import defaultdict
 from typing import List, Tuple
 from data.structure import Transition, Action, State
+from logger import logger
 
 class BaseDQN:
     def __init__(self, args) -> None:
@@ -32,10 +33,8 @@ class BaseDQN:
 
         self.target_update = args.target_update
         self.steps_done = 0
-        self.max_seq_length = args.max_seq_length
 
         self.device = args.device
-        self.logger = args.logger
         self.args = args
 
 
@@ -77,7 +76,7 @@ class BaseDQN:
                                                batch.next_actions,
                                                batch.done) if not done]))
             # max_actions, max_q_values: t_net(dqn_type=dqn)/q_net(dqn_type=ddqn)
-            batch_max_action, batch_max_q_value, _ = \
+            batch_max_action, batch_max_q_value = \
                 self.select_action(batch_state_next,
                                    batch_actions_next,
                                    is_greedy=True,
@@ -130,20 +129,23 @@ class BaseDQN:
             pred_labels = scores.argmax(dim=1).view(-1)
             labels = torch.tensor([state.label for state in batch.state]).to(pred_labels)
             acc = (labels.view(-1) == pred_labels).sum().float() / labels.size(0)
-            info = f'LA: {acc.item()} ('
+            info = f'Acc: {round(acc.item(), 5)} ('
             for label in range(3):
                 inds = (labels.view(-1) == label).nonzero().view(-1)
                 if not inds.size(0): continue
                 acc = (labels.view(-1)[inds] == pred_labels[inds]).sum().float() / inds.size(0)
-                info += f'{self.args.id2label[label]}-{acc.item()}'
-                if label != 2: info += ' / '
+                info += f'{self.args.id2label[label]}: {round(acc.item(), 5)}'
+                if label != 2: info += '/'
                 del inds, acc
             info += ')'
-            print(info)
+            #print(info)
+            logger.info(info)
             
-            inds = random.sample(range(labels.size(0)), k=min(5, labels.size(0)))
-            print(labels.view(-1).cpu().data[inds])
-            print(scores.cpu().data[inds])
+            #inds = random.sample(range(labels.size(0)), k=min(5, labels.size(0)))
+            ##print(labels.view(-1).cpu().data[inds])
+            ##print(scores.cpu().data[inds])
+            #logger.info(labels.view(-1).cpu().data[inds])
+            #logger.info(scores.cpu().data[inds])
             
             del labels, pred_labels
             
@@ -219,8 +221,9 @@ class BaseDQN:
             action = Action(sentence=actions[sent_id].sentence)
 
             q = cur_q_values[sent_id].item()
-            v = cur_q_values.mean().item()
-            batch_selected_action.append((action, q, v))
+            #v = cur_q_values.mean().item()
+            #batch_selected_action.append((action, q, v))
+            batch_selected_action.append((action, q))
             offset += len(actions)
         assert offset == q_values.size(0)
         
@@ -241,7 +244,7 @@ class BaseDQN:
         if self.scheduler is not None:
             state_dict['scheduler'] = self.scheduler.state_dict()
         torch.save(state_dict, os.path.join(output_dir, 'model.bin'))
-        self.logger.info(f'Saving checkpoint to {output_dir}')
+        logger.info(f'Saving checkpoint to {output_dir}')
 
 
     def load(self, input_dir: str) -> None:
@@ -254,7 +257,7 @@ class BaseDQN:
         if self.scheduler is not None and 'scheduler' in state_dict:
             self.scheduler.load_state_dict(['scheduler'])
         self.soft_update_of_target_network(1)
-        self.logger.info(f'Loading model from {input_dir}')
+        logger.info(f'Loading model from {input_dir}')
 
 
     def eval(self):

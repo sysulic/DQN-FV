@@ -27,6 +27,7 @@ from transformers import (
 
 from .base_dqn import BaseDQN
 from data.structure import *
+from logger import logger
 from networks import Transformer, MLPLayer, AttentionLayer
 
 CONFIG_CLASSES = {
@@ -157,7 +158,7 @@ class TransformerDQN(BaseDQN):
             num_layers=args.num_layers,
             aggregate=args.aggregate
         )
-        self.logger.info(self.q_net)
+        logger.info(self.q_net)
         # Target network
         self.t_net = deepcopy(self.q_net) if args.do_train else self.q_net
         self.q_net.zero_grad()

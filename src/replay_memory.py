@@ -9,6 +9,8 @@ from data.structure import Transition
 
 import pdb
 
+from logger import logger
+
 class ReplayMemory:
     def __init__(self, capacity: int) -> None:
         self.capacity = capacity
@@ -52,10 +54,6 @@ class PrioritizedReplayMemory(ReplayMemory):
         self.tree = [0.] * (2 * self.capacity - 1)
 
     def push(self, item: Transition) -> None:
-        '''
-        对于第一条存储的数据，我们认为它的优先级P是最大的，同时，
-        对于新来的数据，我们也认为它的优先级与当前树中优先级最大的经验相同
-        '''
         idx = self.position + self.capacity - 1
         super().push(item)
         #priority = max(self.tree[-self.capacity:])
@@ -65,8 +63,8 @@ class PrioritizedReplayMemory(ReplayMemory):
         self.update_sumtree(idx, priority, is_error=False)
 
     def sample(self, batch_size: int) -> Tuple[List[int], List[float], List[Transition]]:
-        #idxs, batch = [], []
-        idxs, batch, isweights = [], [], []
+        idxs, batch = [], []
+        #idxs, batch, isweights = [], [], []
         segment = self.tree[0] / batch_size
         self.beta = np.min([1, self.beta + self.beta_increment_per_sampling])  # max=1
         
@@ -86,19 +84,13 @@ class PrioritizedReplayMemory(ReplayMemory):
             batch.append(self.memory[idx + 1 - self.capacity])
             idxs.append(idx)
 
-            #prob = priority / self.tree[0]
-            prob = 1
-            #isweights.append(np.power(prob / min_prob, -self.beta))
-            isweights.append(prob)
+            ##prob = priority / self.tree[0]
+            #prob = 1
+            ##isweights.append(np.power(prob / min_prob, -self.beta))
+            #isweights.append(prob)
 
-        #isweights = np.asarray(isweights)
-        #isweights = np.power(isweights, -self.beta)
-        #isweights = np.power(isweights, self.beta)
-        #isweights = isweights / np.mean(isweights)
-        #assert np.isinf(isweights).sum() == 0 and np.isnan(isweights).sum() == 0
-        #isweights = isweights.tolist()
-
-        return tuple(idxs), tuple(isweights), tuple(batch)
+        #return tuple(idxs), tuple(isweights), tuple(batch)
+        return tuple(idxs), tuple(batch)
 
     def update_sumtree(self, idx: int, value: float, is_error: bool=True) -> None:
         priority = self._get_priority(value) if is_error else value
@@ -135,7 +127,8 @@ class ReplayMemoryWithLabel:
     def __init__(self, capacity: int, num_labels: int=3, proportion: List[float]=[2., 2., 1.]) -> None:
         self.proportion = np.asarray(proportion) / sum(proportion)
         self.capacity_per_label = list(map(int, self.proportion * capacity))
-        print('capacity_per_label: ', self.capacity_per_label)
+        #print('capacity_per_label: ', self.capacity_per_label)
+        logger.info('capacity_per_label: %s'% self.capacity_per_label)
         self.replay_memories = [ReplayMemory(capacity) for capacity in self.capacity_per_label]
 
     def reset(self):
@@ -171,13 +164,16 @@ class PrioritizedReplayMemoryWithLabel(ReplayMemoryWithLabel):
         sizes[1] = batch_size - sizes[0] - sizes[2]
         assert sum(sizes) == batch_size
         
-        idxs, isweights, batch = [], [], []
+        #idxs, isweights, batch = [], [], []
+        idxs, batch = [], []
         for label, (replay_memory, size) in enumerate(zip(self.replay_memories, sizes)):
-            _idxs, _isweights, _batch = replay_memory.sample(size)
+            #_idxs, _isweights, _batch = replay_memory.sample(size)
+            _idxs, _batch = replay_memory.sample(size)
             idxs += list(zip([label] * len(_idxs), _idxs))
             batch += _batch
-            isweights += _isweights
-        data = list(zip(idxs, isweights, batch))
+            #isweights += _isweights
+        #data = list(zip(idxs, isweights, batch))
+        data = list(zip(idxs, batch))
         random.shuffle(data)
 
         return list(zip(*data))

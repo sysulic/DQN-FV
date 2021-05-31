@@ -13,12 +13,12 @@ def set_com_args(parser) -> None:
         default=None,
         type=str
     )
-    parser.add_argument(
-        "--checkpoints",
-        default=None,
-        nargs='+',
-        type=str
-    )
+    #parser.add_argument(
+    #    "--checkpoints",
+    #    default=None,
+    #    nargs='+',
+    #    type=str
+    #)
     parser.add_argument(
         "--output_dir",
         default="output",
@@ -48,23 +48,22 @@ def set_com_args(parser) -> None:
         default=3,
         type=int
     )
-    parser.add_argument(
-        "--max_sent_length",
-        default=64,
-        type=int,
-        help="The maximum length of each sentence"
-    )
-    parser.add_argument(
-        "--max_seq_length",
-        default=500,
-        type=int,
-        help="The maximum total input sequence length after tokenization. Sequences longer "
-        "than this will be truncated, sequences shorter will be padded.",
-    )
+    #parser.add_argument(
+    #    "--max_sent_length",
+    #    default=64,
+    #    type=int,
+    #    help="The maximum length of each sentence"
+    #)
+    #parser.add_argument(
+    #    "--max_seq_length",
+    #    default=500,
+    #    type=int,
+    #    help="The maximum total input sequence length after tokenization. Sequences longer "
+    #    "than this will be truncated, sequences shorter will be padded.",
+    #)
     parser.add_argument("--do_train", action="store_true", help="Whether to run training.")
     parser.add_argument("--do_eval", action="store_true", help="Whether to run eval on the dev set.")
-    parser.add_argument("--do_test", action="store_true", help="Whether to run eval on the test set.")
-    parser.add_argument("--do_fever2", action="store_true", help="Whether to run eval on the fever2 dev set.")
+    #parser.add_argument("--do_test", action="store_true", help="Whether to run eval on the test set.")
     parser.add_argument(
         #"--do_lower_case", action="store_true", help="Set this flag if you are using an uncased model.",
         "--do_lower_case", type=int, choices=[0, 1], help="Set this flag if you are using an uncased model.",
@@ -111,7 +110,6 @@ def set_com_args(parser) -> None:
 def set_dqn_args(parser) -> None:
     parser.add_argument('--dqn_type', default='ddqn', choices=['dqn', 'ddqn'])
     parser.add_argument('--dqn_mode', default='lstm', choices=['bert', 'lstm', 'transformer', 'ggnn'])
-    parser.add_argument('--dueling', action='store_true')
     parser.add_argument('--aggregate', default='transformer', type=str, choices=['transformer', 'attention'])
     parser.add_argument('--nhead', default=8, type=int)
     parser.add_argument('--num_layers', default=3, type=int)
@@ -132,7 +130,8 @@ def set_dqn_args(parser) -> None:
     parser.add_argument('--pred_thred', default=0.1, type=float)
 
 def set_bert_args(parser) -> None:
-    from dqn.bert_dqn import MODEL_CLASSES
+    #from dqn.bert_dqn import MODEL_CLASSES
+    from data.load_data import MODEL_CLASSES
     # Required parameters
     parser.add_argument(
         "--model_name_or_path",

@@ -27,6 +27,7 @@ from transformers import (
 from .base_dqn import BaseDQN
 from data.structure import *
 from data.dataset import FeverDataset
+from logger import logger
 
 from networks import Transformer, MLPLayer, LayerNormLSTM, AttentionLayer
 #from networks import Transformer, MLPLayer
@@ -160,7 +161,7 @@ class LstmDQN(BaseDQN):
             nheads=args.nhead,
             aggregate=args.aggregate
         )
-        self.logger.info(self.q_net)
+        logger.info(self.q_net)
         # Target network
         self.t_net = deepcopy(self.q_net) if args.do_train else self.q_net
         self.q_net.zero_grad()
