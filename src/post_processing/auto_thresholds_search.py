@@ -17,9 +17,7 @@ def load_result(filename):
         pred_result = {}
         for item in items[3]:
             pred_label = item[0]
-            # [[q_sa, val_s],]
             score_seq = item[1]
-            #evi_seq = [evi for _, _, _, evi in item]
             if pred_label == 'SUPPORTS':
                 key = 'T'
             elif pred_label == 'REFUTES':
@@ -31,86 +29,6 @@ def load_result(filename):
     return result
 
 
-#def search_N(args):
-#    points, samples, label_fn, filter_fn = args
-#    best_value, target_alpha = float('-inf'), None
-#    #for alpha in tqdm(points):
-#    pre_score = sorted([(label_fn(*pred), label) for label, *pred in samples if filter_fn(*pred)])
-#    index, N2N, TF2TF = 0, 0, 0
-#    N_list, TF_list = [], []
-#    for score, label in pre_score:
-#        if label=="NOT ENOUGH INFO":
-#            N2N += 1
-#            N_list.append(score)
-#        else:
-#            TF_list.append(score)
-#
-#    for step, alpha in enumerate(points):
-#        while index < len(pre_score) and pre_score[index][0]<=alpha:
-#            if pre_score[index][1] == "NOT ENOUGH INFO":
-#                N2N -= 1
-#            if pre_score[index][1] != "NOT ENOUGH INFO":
-#                TF2TF += 1
-#            index += 1
-#        if best_value <= N2N + TF2TF:
-#            best_value = N2N + TF2TF
-#            target_alpha = alpha
-#        if step % 100 == 0:
-#            logger.info(f'target_label:{"NOT ENOUGH INFO"}\tcur_best_value:{best_value}\ttarget_alpha:{target_alpha}')
-#        if index >= len(pre_score):
-#            break
-#    logger.info(f'target_label:{"NOT ENOUGH INFO"}\tbest_value:{best_value}\ttarget_alpha:{target_alpha}')
-#    return "NOT ENOUGH INFO", best_value, target_alpha
-#
-#def search_TF(args):
-#    points, samples, target_label, label_fn, filter_fn = args
-#    best_value, target_alpha = float('-inf'), None
-#    #for alpha in tqdm(points):
-#    pre_score=sorted([(label_fn(*pred), label) for label, *pred in samples if filter_fn(*pred)])
-#    index, T2T, T2N=0, 0, 0
-#    for score, label in pre_score:
-#        if label==target_label:
-#            T2T+=1
-#        if label=="NOT ENOUGH INFO":
-#            T2N+=1
-#
-#    for step, alpha in enumerate(points):
-#        while index < len(pre_score) and pre_score[index][0]<=alpha:
-#            if pre_score[index][1] == target_label:
-#                T2T -= 1
-#            if pre_score[index][1] == "NOT ENOUGH INFO":
-#                T2N -= 1
-#            index += 1
-#        if best_value <= T2T - T2N:
-#            best_value = T2T - T2N
-#            target_alpha = alpha
-#        if step % 100 == 0:
-#            logger.info(f'target_label:{target_label}\tcur_best_value:{best_value}\ttarget_alpha:{target_alpha}')
-#        if index >= len(pre_score):
-#            break
-#    logger.info(f'target_label:{target_label}\tbest_value:{best_value}\ttarget_alpha:{target_alpha}')
-#    return target_label, best_value, target_alpha
-#
-#def calc_LA(samples, alpha_T, alpha_F, alpha_N):
-#    prediction, labels = [], []
-#    for label, (q_T, i), (q_F, j), (q_N, k) in samples:
-#        value = min(q_N) - max(q_T[i], q_F[j])
-#        if q_N[k] > max(q_T[i], q_F[j]) and value > alpha_N:
-#            prediction.append('NOT ENOUGH INFO' == label)
-#        elif q_T[i] > q_F[j]:
-#            prediction.append('SUPPORTS' == label if q_T[i] - max(q_F[i], q_N[i]) > alpha_T else 'NOT ENOUGH INFO' == label)
-#        else:
-#            prediction.append('REFUTES' == label if q_F[j] - max(q_T[j], q_N[j]) > alpha_F else 'NOT ENOUGH INFO' == label)
-#        labels.append(label)
-#    LA = sum(prediction) / len(prediction)
-#    LA_per_class = {'SUPPORTS': [0, 0], 'REFUTES': [0, 0], 'NOT ENOUGH INFO': [0, 0]}
-#    for label, pred in zip(labels, prediction):
-#        LA_per_class[label][0] += pred
-#        LA_per_class[label][1] += 1
-#    total_LA = {key: value[0] / value[1] for key, value in LA_per_class.items()}
-#    total_LA['total'] = LA
-#    return {'alpha': {'T': alpha_T, 'F': alpha_F, 'N': alpha_N}, 'LA': total_LA}
-#
 def search_N(args):
     points, samples, label_fn, filter_fn = args
     best_value, target_alpha = float('-inf'), None
@@ -250,9 +168,5 @@ def auto_threshold_search(in_file):
 
     LA_result = calc_LA(samples, alpha_T, alpha_F, alpha_N)
 
-    #logger.info(f'Saving result to {args.out_file}')
-    #with open(out_file, 'w') as fw:
-    #    json.dump(LA_result, fw)
-    #logger.info('LA result %s' % LA_result)
     return LA_result
 

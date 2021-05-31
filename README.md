@@ -28,6 +28,12 @@ The structure of the data folder is as follows:
 
 To replicate the experiments, you need to download these data as follows, or directly obtain them at [Google Drive](https://drive.google.com/drive/folders/1armZDd2fch8RFH09rfswAIwbdsx_c2QW?usp=sharing).
 
+Note: due to the large size, you should run the following commond to download `fever.db` alone and put it into `fever`:
+```
+# Download the fever database
+wget -O data/fever/fever.db https://s3-eu-west-1.amazonaws.com/fever.public/wiki_index/fever.db
+```
+
 - `bert`: you can download the Roberta pre-trained model with the following commands and put them into `bert/roberta-large`.
 ```
 wget -O pytorch_model.bin https://s3.amazonaws.com/models.huggingface.co/bert/roberta-large-pytorch_model.bin

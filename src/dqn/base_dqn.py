@@ -51,14 +51,14 @@ class BaseDQN:
         if self.args.n_gpu > 1:
             self.q_net = torch.nn.DataParallel(self.q_net)
             self.t_net = torch.nn.DataParallel(self.t_net)
-        # Distributed training (should be after apex fp16 initialization)
-        if self.args.local_rank != -1:
-            self.q_net = torch.nn.parallel.DistributedDataParallel(
-                self.q_net, device_ids=[self.args.local_rank], output_device=self.args.local_rank, find_unused_parameters=True,
-            )
-            self.t_net = torch.nn.parallel.DistributedDataParallel(
-                self.t_net, device_ids=[self.args.local_rank], output_device=self.args.local_rank, find_unused_parameters=True,
-            )
+        ## Distributed training (should be after apex fp16 initialization)
+        #if self.args.local_rank != -1:
+        #    self.q_net = torch.nn.parallel.DistributedDataParallel(
+        #        self.q_net, device_ids=[self.args.local_rank], output_device=self.args.local_rank, find_unused_parameters=True,
+        #    )
+        #    self.t_net = torch.nn.parallel.DistributedDataParallel(
+        #        self.t_net, device_ids=[self.args.local_rank], output_device=self.args.local_rank, find_unused_parameters=True,
+        #    )
 
 
     def update(self, transitions: List[Transition], isweights: List[float]=None, log: bool=False) -> float:
@@ -118,9 +118,6 @@ class BaseDQN:
         # state_action value of q_net
         labels = torch.tensor([state.pred_label for state in batch.state],
                               dtype=torch.long, device=self.device).view(-1, 1)
-        #state_action_values = self.q_net(
-        #    **self.convert_to_inputs_for_update(batch.state, batch.action)
-        #)[0].gather(dim=1, index=labels).view(-1)
         scores = self.q_net(**self.convert_to_inputs_for_update(batch.state, batch.action))[0]
         state_action_values = scores.gather(dim=1, index=labels).view(-1)
         del labels
@@ -221,8 +218,6 @@ class BaseDQN:
             action = Action(sentence=actions[sent_id].sentence)
 
             q = cur_q_values[sent_id].item()
-            #v = cur_q_values.mean().item()
-            #batch_selected_action.append((action, q, v))
             batch_selected_action.append((action, q))
             offset += len(actions)
         assert offset == q_values.size(0)
