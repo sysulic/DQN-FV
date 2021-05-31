@@ -1,5 +1,5 @@
 **/__pycache__/*
-data/bert/roberta-large
+data/bert/roberta-large/*
 !data/bert/roberta-large/README.md
 data/fever/fever.db
 data/glue/*
