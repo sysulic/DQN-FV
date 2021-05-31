@@ -7,6 +7,7 @@ import numpy as np
 
 from logger import logger
 
+
 def load_result(filename):
     with open(filename, 'r') as fr:
         data = json.load(fr)
@@ -60,6 +61,7 @@ def search_N(args):
     logger.info(f'target_label:{"NOT ENOUGH INFO"}\tbest_value:{best_value}\ttarget_alpha:{target_alpha}')
     return "NOT ENOUGH INFO", best_value, target_alpha
 
+
 def search_TF(args):
     points, samples, target_label, label_fn, filter_fn = args
     best_value, target_alpha = float('-inf'), None
@@ -89,6 +91,7 @@ def search_TF(args):
     logger.info(f'target_label:{target_label}\tbest_value:{best_value}\ttarget_alpha:{target_alpha}')
     return target_label, best_value, target_alpha
 
+
 def calc_LA(samples, alpha_T, alpha_F, alpha_N):
     prediction, labels = [], []
     for label, (q_T, i), (q_F, j), (q_N, k) in samples:
@@ -109,7 +112,8 @@ def calc_LA(samples, alpha_T, alpha_F, alpha_N):
     total_LA = {key: value[0] / value[1] for key, value in LA_per_class.items()}
     total_LA['total'] = LA
     return {'alpha': {'T': alpha_T, 'F': alpha_F, 'N': alpha_N}, 'LA': total_LA}
-#def auto_threshold_search(in_file, out_file):
+
+
 def auto_threshold_search(in_file):
     raw_samples = load_result(in_file)
     samples = []

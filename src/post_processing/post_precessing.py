@@ -20,14 +20,12 @@ def imprecise(data, alphas, is_test=False):
                 pred_label = 'SUPPORTS'
             else:
                 pred_label = 'NOT ENOUGH INFO'
-#                 pred_evi=[]
         else:
             pred_evi = pred_result[F][-1][-1]
             if q_F[j] - max(q_T[j], q_N[j]) > alpha_F:
                 pred_label = 'REFUTES'
             else:
                 pred_label = 'NOT ENOUGH INFO'
-#                 pred_evi=[]
                 
         result.append({
             'id': idx,
@@ -42,6 +40,7 @@ def imprecise(data, alphas, is_test=False):
         })
     return result
 
+
 def precise(data,  alphas,is_test=False):
     alpha_T, alpha_F, alpha_N = alphas['T'], alphas['F'], alphas['N']
     result = []
@@ -52,22 +51,19 @@ def precise(data,  alphas,is_test=False):
         i, j, k = [np.array(x).argmax() for x in [q_T, q_F, q_N]]
         if q_N[k] > max(q_T[i], q_F[j]) and min(q_N) - max(q_T[i], q_F[j]) > alpha_N:
             pred_label = 'NOT ENOUGH INFO'
-            pred_evi=[]
-            pred_evi=pred_result[T][-1][i] if q_T[i]>q_F[j] else pred_result[F][-1][j]
+            pred_evi = pred_result[T][-1][i] if q_T[i]>q_F[j] else pred_result[F][-1][j]
         elif q_T[i] > q_F[j]:
             pred_evi = pred_result[T][-1][i]
             if q_T[i] - max(q_F[i], q_N[i]) > alpha_T:
                 pred_label = 'SUPPORTS'
             else:
                 pred_label = 'NOT ENOUGH INFO'
-#                 pred_evi=[]
         else:
             pred_evi = pred_result[F][-1][j]
             if q_F[j] - max(q_T[j], q_N[j]) > alpha_F:
                 pred_label = 'REFUTES'
             else:
                 pred_label = 'NOT ENOUGH INFO'
-#                 pred_evi=[]
                 
         result.append({
             'id': idx,

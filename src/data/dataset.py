@@ -43,21 +43,6 @@ class FeverDataset(Dataset):
     def __len__(self):
         return len(self.data)
 
-#class ConcatDataset(Dataset):
-#    def __init__(self, *datasets):
-#        self.datasets = datasets
-#
-#    def __getitem__(self, index):
-#        return tuple(d[index] for d in self.datasets)
-#    
-#    def __len__(self):
-#        return min(len(d) for d in self.datasets)
-
-#def collate_fn(batch):
-#    data = []
-#    for item in batch:
-#        data.append(item)
-#    return list(zip(*data))
 
 def collate_fn(batch):
     batch_state, batch_actions = [], []

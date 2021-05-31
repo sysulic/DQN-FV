@@ -61,7 +61,6 @@ def set_random_seeds(random_seed):
         torch.cuda.manual_seed(random_seed)
 
 
-
 def train(args,
           agent,
           train_dataset: FeverDataset,
@@ -276,14 +275,11 @@ def evaluate(args: dict, agent, save_dir: str, dev_data: FeverDataset=None, is_e
     with open(os.path.join(save_dir, name), 'w') as fw:
         json.dump(results_of_q_state_seq, fw)
 
-    
     if args.do_eval and print_log:
         results, _ = predict_without_post_processing(results_of_q_state_seq)
-        #predicted_list, scores = calc_fever_score(results, args.dev_true_file, logger=None)
         _, scores = calc_fever_score(results, args.dev_true_file, logger=None)
         
         return scores
-
 
 
 def run_dqn(args) -> None:
@@ -315,23 +311,6 @@ def run_dqn(args) -> None:
           acc_loss_trained_in_current_epoch,
           steps_trained_in_current_epoch,
           losses_trained_in_current_epoch)
-    
-    #elif args.do_eval or args.do_test:
-    #    assert args.checkpoints is not None
-    #    if args.do_eval:
-    #        dev_data = load_and_process_data(args,
-    #                                         os.path.join(args.data_dir, 'dev_v6.jsonl'),
-    #                                         agent.token)
-    #    if args.do_test:
-    #        test_data = load_and_process_data(args,
-    #                                          os.path.join(args.data_dir, 'test_v6.jsonl'),
-    #                                          agent.token)
-    #    for checkpoint in args.checkpoints:
-    #        agent.load(checkpoint)
-    #        if args.do_eval:
-    #            evaluate(args, agent, checkpoint, dev_data, is_eval=True)
-    #        if args.do_test:
-    #            evaluate(args, agent, checkpoint, test_data, is_eval=False)
 
 
 def main() -> None:
