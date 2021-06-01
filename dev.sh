@@ -22,16 +22,16 @@ export BERT_TYPE=data/bert/roberta-large
 export LOWER_CASE=0
 
 # context sub-module
-#export DQN_MODE=transformer
-export DQN_MODE=lstm
+export DQN_MODE=transformer
+#export DQN_MODE=lstm
 
 # aggregation sub-module
 #export AGGREGATE=transformer
 export AGGREGATE=attention
 
 #export CHECKPOINT=output/roberta-large/roberta-ddqn-label_priority-5e-6-TT-3/best-checkpoint
-#export CHECKPOINT=output/roberta-large/roberta-ddqn-label_priority-5e-6-TA-3/best-checkpoint
-export CHECKPOINT=output/roberta-large/roberta-ddqn-label_priority-5e-6-LA-3/best-checkpoint
+export CHECKPOINT=output/roberta-large/roberta-ddqn-label_priority-5e-6-TA-3/best-checkpoint
+#export CHECKPOINT=output/roberta-large/roberta-ddqn-label_priority-5e-6-LA-3/best-checkpoint
 #export CHECKPOINT=output/roberta-large/roberta-ddqn-label_priority-5e-6-LT-3/best-checkpoint
 
 export GPU=0

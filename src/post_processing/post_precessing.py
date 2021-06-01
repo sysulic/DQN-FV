@@ -12,7 +12,6 @@ def imprecise(data, alphas, is_test=False):
         i, j, k = [np.array(x).argmax() for x in [q_T, q_F, q_N]]
         if q_N[k] > max(q_T[i], q_F[j]) and min(q_N) - max(q_T[i], q_F[j]) > alpha_N:
             pred_label = 'NOT ENOUGH INFO'
-            pred_evi=[]
             pred_evi=pred_result[T][-1][-1] if q_T[i]>q_F[j] else pred_result[F][-1][-1]
         elif q_T[i] > q_F[j]:
             pred_evi = pred_result[T][-1][-1]

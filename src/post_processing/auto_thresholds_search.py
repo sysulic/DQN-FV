@@ -150,10 +150,10 @@ def auto_threshold_search(in_file):
     samples_TF = []
 
     for sample in samples:
-            _, (q_T, i), (q_F, j), (q_N, k) = sample
-            value = min(q_N) - max(q_T[i], q_F[j])
-            if q_N[k] <= max(q_T[i], q_F[j]) or value <= alpha_N:
-                    samples_TF.append(sample)
+        _, (q_T, i), (q_F, j), (q_N, k) = sample
+        value = min(q_N) - max(q_T[i], q_F[j])
+        if q_N[k] <= max(q_T[i], q_F[j]) or value <= alpha_N:
+            samples_TF.append(sample)
 
     T = np.asarray(sorted([q_T[i] - max(q_F[i], q_N[i]) for _, (q_T, i), (q_F, j), (q_N, k) in samples_TF if q_T[i] > q_F[j]]))
     F = np.asarray(sorted([q_F[j] - max(q_T[j], q_N[j]) for _, (q_T, i), (q_F, j), (q_N, k) in samples_TF if q_T[i] <= q_F[j]]))
